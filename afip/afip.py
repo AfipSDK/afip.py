@@ -1,20 +1,25 @@
 import http.client
 import json
 
+from .webservice import WebService
+from .electronicbilling import ElectronicBilling
+
 class Afip:
     sdk_version_number = '1.0.0'
-    
+
     def __init__(self, options: dict):
         if not(options.get("CUIT")):
             raise Exception("CUIT field is required in options")
 
         self.CUIT: int = options.get("CUIT")
-        self.production: bool = options.get("production") if options.get("production") else False
+        self.production: bool = options.get("production") if options.get("production") == True else False
         self.environment: str = "prod" if self.production == True else "dev"
         self.cert: str = options.get("cert")
         self.key: str = options.get("key")
         self.access_token: str = options.get("access_token")
     
+        self.ElectronicBilling = ElectronicBilling(self)
+
 
     # Gets token authorization for an AFIP Web Service
     #
@@ -76,3 +81,10 @@ class Afip:
 
         return json.loads(data.decode("utf-8"))
     
+
+    # Create generic Web Service
+    def webService(self, service, options: dict = {}) -> WebService:
+        options['service'] = service
+        options['generic'] = True
+
+        return WebService(self, options)

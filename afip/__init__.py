@@ -1,1 +1,1 @@
-from .afip import *
+from .afip import Afip
