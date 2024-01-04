@@ -50,7 +50,7 @@ class ElectronicBilling(WebService):
       "CbteTipo": type
     }
 
-    self.executeRequest("FECompUltimoAutorizado", req)["CbteNro"]
+    return self.executeRequest("FECompUltimoAutorizado", req)["CbteNro"]
 
   # Create a voucher from AFIP
   def createVoucher(self, data: dict, return_response: bool = False):
@@ -222,4 +222,4 @@ class ElectronicBilling(WebService):
     if res.get("Errors"):
       err = res["Errors"]["Err"][0] if type(res["Errors"]["Err"]) in (tuple, list) else res["Errors"]["Err"]
 
-      raise Exception("(%s) %s") % (err["Code"], err["Msg"])
+      raise Exception("(%s) %s" % (err["Code"], err["Msg"])) 
