@@ -2,7 +2,7 @@ import http.client
 import json
 import re
 
-from .webservice import WebService
+from .web_service import WebService
 
 class ElectronicBilling(WebService):
   soapv12 = True
