@@ -9,7 +9,7 @@ from .register_scope_ten import RegisterScopeTen
 from .register_scope_thirteen import RegisterScopeThirteen
 
 class Afip:
-  sdk_version_number = '1.0.1'
+  sdk_version_number = '1.1.0'
 
   def __init__(self, options: dict):
     if not(options.get("CUIT")):
