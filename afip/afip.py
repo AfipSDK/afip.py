@@ -1,5 +1,6 @@
 import http.client
 import json
+import time
 
 from .web_service import WebService
 from .electronic_billing import ElectronicBilling
@@ -8,7 +9,7 @@ from .register_scope_ten import RegisterScopeTen
 from .register_scope_thirteen import RegisterScopeThirteen
 
 class Afip:
-  sdk_version_number = '1.0.0'
+  sdk_version_number = '1.0.1'
 
   def __init__(self, options: dict):
     if not(options.get("CUIT")):
@@ -94,3 +95,100 @@ class Afip:
     options['generic'] = True
 
     return WebService(self, options)
+  
+  # Create AFIP cert
+  def createCert(self, username: str, password: str, alias: str) -> dict:
+    conn = http.client.HTTPSConnection("app.afipsdk.com")
+
+    payload = {
+      "environment": self.environment,
+      "tax_id": self.CUIT,
+      "username": username,
+      "password": password,
+      "alias": alias
+    }
+
+    headers = {
+      "Content-Type": "application/json",
+      "sdk-version-number": self.sdk_version_number,
+      "sdk-library": "python",
+      "sdk-environment": self.environment
+    }
+
+    if self.access_token: headers["Authorization"] = "Bearer %s" % self.access_token
+
+    retry_request = 24
+
+    while retry_request >= 0:
+      retry_request -= 1
+
+      conn.request("POST", "/api/v1/afip/certs", json.dumps(payload), headers)
+
+      res = conn.getresponse()
+      
+      data = res.read()
+
+      if res.getcode() >= 400:
+        raise Exception(data.decode("utf-8"))
+    
+      decoded_res = json.loads(data.decode("utf-8"))
+
+      if decoded_res["status"] == "complete":
+        return decoded_res["data"]
+
+      if decoded_res.get("long_job_id"):
+        payload["long_job_id"] = decoded_res["long_job_id"]
+
+      time.sleep(5)
+
+    raise Exception("Error: Waiting for too long")
+  
+  # Create AFIP cert
+  def createWSAuth(self, username: str, password: str, alias: str, wsid: str) -> dict:
+    conn = http.client.HTTPSConnection("app.afipsdk.com")
+
+    payload = {
+      "environment": self.environment,
+      "tax_id": self.CUIT,
+      "username": username,
+      "password": password,
+      "alias": alias,
+      "wsid": wsid
+    }
+
+    headers = {
+      "Content-Type": "application/json",
+      "sdk-version-number": self.sdk_version_number,
+      "sdk-library": "python",
+      "sdk-environment": self.environment
+    }
+
+    if self.access_token: headers["Authorization"] = "Bearer %s" % self.access_token
+
+    retry_request = 24
+
+    while retry_request >= 0:
+      retry_request -= 1
+
+      conn.request("POST", "/api/v1/afip/ws-auths", json.dumps(payload), headers)
+
+      res = conn.getresponse()
+      
+      data = res.read()
+
+      if res.getcode() >= 400:
+        raise Exception(data.decode("utf-8"))
+    
+      decoded_res = json.loads(data.decode("utf-8"))
+
+      if decoded_res["status"] == "complete":
+        return decoded_res["data"]
+      
+      if decoded_res.get("long_job_id"):
+        payload["long_job_id"] = decoded_res["long_job_id"]
+
+      time.sleep(5)
+      
+
+    raise Exception("Error: Waiting for too long")
+  
