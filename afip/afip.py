@@ -1,6 +1,7 @@
 import http.client
 import json
 import time
+import os
 
 from .web_service import WebService
 from .electronic_billing import ElectronicBilling
@@ -8,8 +9,10 @@ from .register_inscription_proof import RegisterInscriptionProof
 from .register_scope_ten import RegisterScopeTen
 from .register_scope_thirteen import RegisterScopeThirteen
 
+os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(__file__), "data", "cacert.pem")
+
 class Afip:
-  sdk_version_number = '1.1.0'
+  sdk_version_number = '1.1.1'
 
   def __init__(self, options: dict):
     if not(options.get("CUIT")):
