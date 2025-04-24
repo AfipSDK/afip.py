@@ -20,6 +20,9 @@
     <a href="https://docs.afipsdk.com"><strong>Explorar documentación »</strong></a>
     <br />
     <br />
+    <a href="https://discord.gg/A6TuHEyAZm"><strong>Comunidad Afip SDK</strong></a>
+    <br />
+    <br />
     <a href="https://github.com/afipsdk/afip.py/issues">Reportar un bug</a>
   </p>
 </p>
@@ -28,6 +31,11 @@
 <!-- DOCS -->
 ## Documentación
 [Explorar documentación](https://docs.afipsdk.com)
+
+<!-- COMUNITY -->
+## Comunidad
+[Comunidad Afip SDK](https://discord.gg/A6TuHEyAZm)
+
 
 <!-- ABOUT THE PROJECT -->
 ## Acerca del proyecto
@@ -43,7 +51,7 @@ Link del proyecto: [https://github.com/afipsdk/afip.py](https://github.com/afips
 _Este software y sus desarrolladores no tienen ninguna relación con la AFIP._
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[pip-shield]: https://img.shields.io/pypi/dm/afip.py.svg?logo=python&?logoColor=white
+[pip-shield]: https://static.pepy.tech/badge/afip.py
 [contributors-shield]: https://img.shields.io/github/contributors/afipsdk/afip.py.svg?color=orange
 [issues-shield]: https://img.shields.io/github/issues-closed-raw/afipsdk/afip.py.svg?color=blueviolet
 [license-shield]: https://img.shields.io/github/license/afipsdk/afip.py.svg?color=blue
