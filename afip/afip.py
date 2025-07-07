@@ -12,7 +12,7 @@ from .register_scope_thirteen import RegisterScopeThirteen
 os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(__file__), "data", "cacert.pem")
 
 class Afip:
-  sdk_version_number = '1.1.1'
+  sdk_version_number = '1.1.2'
 
   def __init__(self, options: dict):
     if not(options.get("CUIT")):

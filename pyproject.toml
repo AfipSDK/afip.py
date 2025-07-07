@@ -1,14 +1,13 @@
 [tool.poetry]
 name = "afip.py"
-version = "1.1.1"
-description = "AfipSDK is the fastest way to connect with AFIP"
-authors = ["AfipSDK <afipsdk@gmail.com>"]
+version = "1.1.2"
+description = "Conéctate a ARCA hoy mismo"
+authors = ["AfipSDK <ayuda@afipsdk.com>"]
 readme = "README.md"
 packages = [{include = "afip"}]
 
 [tool.poetry.dependencies]
 python = "^3.0"
-
 
 [build-system]
 requires = ["poetry-core"]
