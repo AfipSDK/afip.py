@@ -12,13 +12,10 @@ from .register_scope_thirteen import RegisterScopeThirteen
 os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(__file__), "data", "cacert.pem")
 
 class Afip:
-  sdk_version_number = '1.1.2'
+  sdk_version_number = '1.2.0'
 
   def __init__(self, options: dict):
-    if not(options.get("CUIT")):
-      raise Exception("CUIT field is required in options")
-
-    self.CUIT: int = options.get("CUIT")
+    self.CUIT: int = options.get("CUIT") if options.get("CUIT") else None
     self.production: bool = options.get("production") if options.get("production") == True else False
     self.environment: str = "prod" if self.production == True else "dev"
     self.cert: str = options.get("cert")
@@ -190,6 +187,77 @@ class Afip:
       if decoded_res.get("long_job_id"):
         payload["long_job_id"] = decoded_res["long_job_id"]
 
+      time.sleep(5)
+      
+
+    raise Exception("Error: Waiting for too long")
+  
+  # Create automation
+  def createAutomation(self, automation: str, params: dict, wait: bool = True) -> dict:
+    conn = http.client.HTTPSConnection("app.afipsdk.com")
+
+    payload = {
+      "automation": automation,
+      "params": params
+    }
+
+    headers = {
+      "Content-Type": "application/json",
+      "sdk-version-number": self.sdk_version_number,
+      "sdk-library": "python",
+      "sdk-environment": self.environment
+    }
+
+    if self.access_token: headers["Authorization"] = "Bearer %s" % self.access_token
+
+    conn.request("POST", "/api/v1/automations", json.dumps(payload), headers)
+
+    res = conn.getresponse()
+    
+    data = res.read()
+
+    if res.getcode() >= 400:
+      raise Exception(data.decode("utf-8"))
+  
+    decoded_res = json.loads(data.decode("utf-8"))
+
+    if not(wait) or decoded_res["status"] == "complete":
+      return decoded_res
+    
+    return self.getAutomationDetails(decoded_res["id"], wait)
+  
+  # Create automation
+  def getAutomationDetails(self, id: str, wait: bool = True) -> dict:
+    conn = http.client.HTTPSConnection("app.afipsdk.com")
+
+    headers = {
+      "Content-Type": "application/json",
+      "sdk-version-number": self.sdk_version_number,
+      "sdk-library": "python",
+      "sdk-environment": self.environment
+    }
+
+    if self.access_token: headers["Authorization"] = "Bearer %s" % self.access_token
+
+    retry_request = 24
+
+    while retry_request >= 0:
+      retry_request -= 1
+
+      conn.request("GET", "/api/v1/automations/%s" % id, None, headers)
+
+      res = conn.getresponse()
+      
+      data = res.read()
+
+      if res.getcode() >= 400:
+        raise Exception(data.decode("utf-8"))
+    
+      decoded_res = json.loads(data.decode("utf-8"))
+
+      if not(wait) or decoded_res["status"] == "complete":
+        return decoded_res
+      
       time.sleep(5)
       
 
