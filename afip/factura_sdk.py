@@ -114,8 +114,8 @@ class FacturaSDK:
   def __init__(self, afip):
     self.afip = afip
 
-    # Own token when the project of Afip SDK is another one; otherwise the access token of Afip
-    self.access_token: str = getattr(afip, "facturasdk_access_token", None) or afip.access_token
+    # The access token of Afip, sent in every request
+    self.access_token: str = afip.access_token
 
     # Environment reported to the API: the one of the token when it is a Factura SDK token
     if self.access_token and self.access_token.startswith("fsk_prod_"):

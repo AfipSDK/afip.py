@@ -22,8 +22,6 @@ class Afip:
     self.cert: str = options.get("cert")
     self.key: str = options.get("key")
     self.access_token: str = options.get("access_token")
-    # Access token of a Factura SDK project (fsk_dev_… or fsk_prod_…), when access_token is not one
-    self.facturasdk_access_token: str = options.get("facturasdk_access_token")
 
     self.ElectronicBilling = ElectronicBilling(self)
     self.RegisterInscriptionProof = RegisterInscriptionProof(self)

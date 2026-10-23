@@ -48,7 +48,7 @@ invoice = afip.FacturaSDK.createInvoice(data, idempotency_key="venta-0001")
 event = afip.FacturaSDK.constructWebhookEvent(raw_body, signature_header, secret)
 ```
 
-Emisores, certificados, comprobantes, webhooks y automatizaciones están en `afip.FacturaSDK`. Los errores de la API llegan como `FacturaSDKError`, con `status`, `data_errors` y `errors`. Si además usás los web services de Afip SDK, pasá el token de Factura SDK en `facturasdk_access_token`.
+Emisores, certificados, comprobantes, webhooks y automatizaciones están en `afip.FacturaSDK`. Los errores de la API llegan como `FacturaSDKError`, con `status`, `data_errors` y `errors`.
 
 <!-- COMUNITY -->
 ## Comunidad
