@@ -13,7 +13,7 @@ from .factura_sdk import FacturaSDK, FacturaSDKError
 os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(__file__), "data", "cacert.pem")
 
 class Afip:
-  sdk_version_number = '1.2.0'
+  sdk_version_number = '1.3.0'
 
   def __init__(self, options: dict):
     self.CUIT: int = options.get("CUIT") if options.get("CUIT") else None
