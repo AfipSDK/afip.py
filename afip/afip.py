@@ -8,11 +8,12 @@ from .electronic_billing import ElectronicBilling
 from .register_inscription_proof import RegisterInscriptionProof
 from .register_scope_ten import RegisterScopeTen
 from .register_scope_thirteen import RegisterScopeThirteen
+from .factura_sdk import FacturaSDK, FacturaSDKError
 
 os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(__file__), "data", "cacert.pem")
 
 class Afip:
-  sdk_version_number = '1.2.0'
+  sdk_version_number = '1.3.0'
 
   def __init__(self, options: dict):
     self.CUIT: int = options.get("CUIT") if options.get("CUIT") else None
@@ -21,11 +22,12 @@ class Afip:
     self.cert: str = options.get("cert")
     self.key: str = options.get("key")
     self.access_token: str = options.get("access_token")
-  
+
     self.ElectronicBilling = ElectronicBilling(self)
     self.RegisterInscriptionProof = RegisterInscriptionProof(self)
     self.RegisterScopeTen = RegisterScopeTen(self)
     self.RegisterScopeThirteen = RegisterScopeThirteen(self)
+    self.FacturaSDK = FacturaSDK(self)
 
 
   # Gets token authorization for an AFIP Web Service
