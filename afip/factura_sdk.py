@@ -133,7 +133,7 @@ class FacturaSDK:
   # the background: the result arrives at your webhook. With wait the method polls until the
   # invoice is decided; with "sync": True in the data Factura SDK decides it within the request.
   # idempotency_key identifies the sale in your system: repeating it returns the same invoice
-  # instead of issuing another one
+  # instead of issuing another one. In the sandbox, "sandbox": { "result": … } forces the outcome
   def createInvoice(self, data: dict, idempotency_key: str = None, wait: bool = False) -> dict:
     headers = { "Idempotency-Key": idempotency_key } if idempotency_key else None
 
@@ -262,13 +262,27 @@ class FacturaSDK:
 
   # List certificates, with cursor pagination
   #
-  # Filters: tax_id, status, limit, cursor
+  # Filters: tax_id, search, status, limit, cursor
   def getCertificates(self, params: dict = None) -> dict:
     return self._request("GET", "certificates", params=params)
 
   # Revoke a certificate: it no longer signs
   def revokeCertificate(self, id: str) -> dict:
     return self._request("POST", "certificates/%s/revoke" % id)
+
+  # Renew a certificate in place: it keeps its id, so the issuers that use it keep invoicing with
+  # the new one
+  #
+  # Uploaded (cert and key in PEM) it answers the certificate. Renewed in ARCA (source
+  # "automation", with username and password) it is an automation: with wait returns it finished,
+  # with the certificate and "renewed": True in "data". A revoked certificate can not be renewed
+  def renewCertificate(self, id: str, data: dict, wait: bool = True) -> dict:
+    return self._automation(self._request("POST", "certificates/%s/renew" % id, data), wait)
+
+  # Delete a certificate: it disappears from the project without being revoked in ARCA. The
+  # issuers that used it keep their reference
+  def deleteCertificate(self, id: str) -> None:
+    self._request("DELETE", "certificates/%s" % id)
 
   # Authorize a certificate in ARCA for the electronic billing web service (wsfe), with the tax
   # password of its owner (password and optionally username)
@@ -290,7 +304,7 @@ class FacturaSDK:
 
   # List webhook endpoints
   #
-  # Filters: status
+  # Filters: status, limit, cursor
   def getWebhookEndpoints(self, params: dict = None) -> dict:
     return self._request("GET", "webhook-endpoints", params=params)
 
